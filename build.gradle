@@ -1,0 +1,52 @@
+plugins {
+	id "com.github.ben-manes.versions"
+}
+
+wrapper {
+	gradleVersion = '7.5.1'
+}
+
+repositories {
+	mavenCentral()
+	gradlePluginPortal()
+}
+
+apply plugin: "java"
+apply plugin: 'eclipse'
+apply plugin: 'jacoco'
+apply plugin: 'java-library-distribution'
+apply plugin: 'application'
+
+java {
+	withSourcesJar()
+	withJavadocJar()
+}
+
+application {
+    mainClass = "com.cobber.dqj.Driver"
+}
+
+project.tasks.named("installDist") {
+        duplicatesStrategy = 'exclude'
+}
+
+tasks.withType(JavaCompile) {
+	options.encoding = "UTF-8"
+}
+
+jacoco {
+	toolVersion = libs.versions.jacoco.get()
+}
+
+artifacts {
+	archives javadocJar, sourcesJar
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+	implementation libs.fta
+	implementation libs.jacksonDataBind
+	implementation libs.univocity
+}
