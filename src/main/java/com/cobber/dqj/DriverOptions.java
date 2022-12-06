@@ -17,5 +17,6 @@ package com.cobber.dqj;
 
 class DriverOptions {
 	public String field;
+	public String format;
 	public boolean verbose;
 }

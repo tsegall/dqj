@@ -50,6 +50,7 @@ public class Driver {
 				System.err.println("Usage: dqj [OPTIONS] [<data file>]");
 				System.err.println("Valid OPTIONS are:");
 				System.err.println(" --field <field name> - choose only a single field to process");
+				System.err.println(" --format Native|Glue - select format output (default: Native)");
 				System.err.println(" --quality - Execute Quality checks");
 				System.err.println(" --specification <specification file> - Supply a JSON specification file");
 				System.err.println(" --verbose - output additional debugging information");
@@ -57,6 +58,8 @@ public class Driver {
 			}
 			if ("--field".equals(args[idx]))
 				options.field = args[++idx];
+			if ("--format".equals(args[idx]))
+				options.format = args[++idx];
 			if ("--quality".equals(args[idx]))
 				quality = true;
 			if ("--specification".equals(args[idx]))
@@ -79,11 +82,21 @@ public class Driver {
 			allRuleSets = generateRuleSetsFromSpecification(specificationFile, options);
 
 
-		if (options.verbose || !quality)
-			// Dump all the Rule Sets as JSON
-			for (final RuleSet rules : allRuleSets)
-				if (rules.nonEmpty())
-					System.err.printf("%s%n", mapper.writerWithDefaultPrettyPrinter().writeValueAsString(rules.asJSON()));
+		if (options.verbose || !quality) {
+			if (options.format == null || options.format.equalsIgnoreCase("native")) {
+				for (final RuleSet rules : allRuleSets)
+					if (rules.nonEmpty())
+						System.err.printf("%s%n", mapper.writerWithDefaultPrettyPrinter().writeValueAsString(rules.asJSON()));
+			}
+			else if (options.format.equalsIgnoreCase("glue")) {
+				System.err.println("Rules = [");
+				// Dump all the Rule Sets based on the format requested
+				for (final RuleSet rules : allRuleSets)
+					if (rules.nonEmpty())
+						System.err.printf("%s%n", rules.asDQDL());
+
+			}
+		}
 
 		if (quality)
 			Quality.execute(args[idx++], allRuleSets, options);

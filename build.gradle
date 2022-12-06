@@ -11,7 +11,7 @@ repositories {
 	gradlePluginPortal()
 }
 
-apply plugin: "java"
+apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'jacoco'
 apply plugin: 'java-library-distribution'
@@ -27,7 +27,15 @@ application {
 }
 
 project.tasks.named("installDist") {
-        duplicatesStrategy = 'exclude'
+	duplicatesStrategy = 'exclude'
+}
+
+tasks.withType(Tar){
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+tasks.withType(Zip){
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 tasks.withType(JavaCompile) {

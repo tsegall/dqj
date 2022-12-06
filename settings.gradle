@@ -15,13 +15,13 @@ pluginManagement {
 dependencyResolutionManagement {
 	versionCatalogs {
 		libs {
-			version('dqj', '1.0.0')
+			version('dqj', '1.0.1')
 			version('jacoco', '0.8.8')
 
 // https://mvnrepository.com/artifact/com.cobber.fta/fta
-			library('fta', 'com.cobber.fta:fta:12.0.7')
+			library('fta', 'com.cobber.fta:fta:12.2.0')
 // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
-			library('jacksonDataBind', 'com.fasterxml.jackson.core:jackson-databind:2.14.0')
+			library('jacksonDataBind', 'com.fasterxml.jackson.core:jackson-databind:2.14.1')
 // https://mvnrepository.com/artifact/com.univocity/univocity-parsers
 			library('univocity', 'com.univocity:univocity-parsers:2.9.1')
 		}

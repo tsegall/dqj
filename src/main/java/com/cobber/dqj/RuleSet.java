@@ -37,6 +37,7 @@ public class RuleSet {
 
 	/**
 	 * Add a Rule to the RuleSet.
+	 * @param rule The Rule to add to the RuleSet.
 	 */
 	public void add(final Rule rule) {
 		rules.add(rule);
@@ -56,6 +57,51 @@ public class RuleSet {
 			rulesNode.add(rule.asJSON());
 
 		return ruleSet;
+	}
+
+	private String fmt(final String input, final String type) {
+		if ("Long".equals(type) || "Double".equals(type))
+			return input;
+
+		return "\"" + input + "\"";
+	}
+
+	public String asDQDL() {
+		final StringBuilder b = new StringBuilder();
+		String type = null;
+
+		for (final Rule rule : rules)
+			switch (rule.getName()) {
+			case "BaseType":
+				type = rule.getArguments()[0];
+				break;
+			case "Unique":
+				b.append("IsUnique \"" + name + "\", ");
+				break;
+			case "NullPercent":
+				b.append("IsComplete \"" + name + "\", ");
+				break;
+			case "Min":
+				b.append("ColumnValues \"" + name + "\" >= " + fmt(rule.getArguments()[0], type) + ", ");
+				break;
+			case "Max":
+				b.append("ColumnValues \"" + name + "\" <= " + fmt(rule.getArguments()[0], type) + ", ");
+				break;
+			case "OneOf":
+				b.append("ColumnValues \"" + name + "\" in [");
+				for (int i = 0; i < rule.getArguments().length; i++) {
+					if (i != 0)
+						b.append(", ");
+					b.append(fmt(rule.getArguments()[i], type));
+				}
+				b.append("]");
+				break;
+			default:
+				b.append(" ");
+				break;
+			}
+
+		return b.toString();
 	}
 
 	public String getName() {
